@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Research &mdash; Rohan Pankaj</title>
-  <meta name="description" content="Research and publications by Rohan Pankaj — quantum computing, neutron transport, and computational physics." />
+  <meta name="description" content="Research and publications by Rohan Pankaj." />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -15,6 +15,8 @@
     <ul class="nav-links">
       <li><a href="about.html">About</a></li>
       <li><a href="research.html" class="active">Research</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="experience.html">Experience</a></li>
       <li><a href="writing.html">Writing</a></li>
     </ul>
   </div>
@@ -23,9 +25,18 @@
 <main>
   <div class="container">
 
-    <h1 class="page-title">Research</h1>
+    <h1 class="page-title fade-in">Research</h1>
 
-    <section class="section">
+    <div class="lab-photo-wrap fade-in">
+      <img
+        src="photos/lab.jpg"
+        alt="Rohan in the lab with oscilloscopes and optical equipment"
+        class="lab-photo"
+      />
+      <p class="photo-caption">In the lab &mdash; measurement and characterization work.</p>
+    </div>
+
+    <section class="section fade-in" style="margin-top:2.5rem;">
       <div class="section-header">
         <h2>Projects</h2>
       </div>
@@ -42,38 +53,49 @@
             Built under the Center for Exascale Monte Carlo Neutron Transport (CEMeNT),
             a DOE Predictive Science Academic Alliance Program center, the code targets
             leadership-class supercomputers and supports both CPU and GPU architectures.
-            I contributed to its development and the associated publication in the
-            Journal of Open Source Software.
           </p>
-          <a href="https://cement-psaap.github.io/" target="_blank" rel="noopener" class="project-link">Project site &rarr;</a>
-        </div>
-
-        <div class="project-card">
-          <div class="project-card-top">
-            <h3>NBA Game Score Prediction</h3>
-            <span class="project-org">Personal project &middot; 2021</span>
-          </div>
           <p>
-            A machine learning system designed to forecast scores for upcoming NBA games.
-            Built as an early project in applied ML on structured, temporal sports data,
-            exploring regression and classification approaches on game-level statistics.
+            I contributed to the codebase and co-authored the associated publication
+            in the Journal of Open Source Software (April 2024).
           </p>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">Monte Carlo methods</span>
+            <span class="skill-tag">Neutron transport</span>
+            <span class="skill-tag">HPC</span>
+            <span class="skill-tag">GPU computing</span>
+          </div>
+          <br/>
+          <a href="https://cement-psaap.github.io/" target="_blank" rel="noopener" class="project-link">Project site &rarr;</a>
         </div>
 
       </div>
     </section>
 
-    <section class="section">
+    <section class="section fade-in">
       <div class="section-header">
         <h2>Publications</h2>
       </div>
 
-      <!-- Auto-loaded from Semantic Scholar when available; falls back to static list -->
       <div id="pubs-container">
         <div id="pubs-loading">Loading publications&hellip;</div>
       </div>
 
-      <!-- Static fallback shown if JS is disabled or API fails -->
+      <div style="margin-top:1rem;">
+        <div class="pub-item">
+          <div class="pub-title">
+            PIEC: A Modular Python Package for Easy and Scalable Laboratory Automation
+          </div>
+          <div class="pub-authors">
+            G. Fratian, A. Qualls, J. Phan, <strong>R. Pankaj</strong>, L. Caretta
+          </div>
+          <div class="pub-venue">Journal of Open Source Software &middot; Under Review (2026)</div>
+          <a href="https://github.com/TransluSci/piec" target="_blank" rel="noopener" class="pub-link">
+            github.com/TransluSci/piec &rarr;
+          </a>
+        </div>
+      </div>
+
       <noscript>
         <div class="pub-list">
           <div class="pub-item">
@@ -94,7 +116,6 @@
           </div>
         </div>
       </noscript>
-
     </section>
 
   </div>
@@ -112,85 +133,54 @@
 </footer>
 
 <script>
-  // Semantic Scholar author ID for Rohan Pankaj.
-  // To find yours: go to semanticscholar.org, search your name, open your profile,
-  // and copy the numeric ID from the URL: /author/<ID>
-  const SEMANTIC_SCHOLAR_AUTHOR_ID = "";
+const SEMANTIC_SCHOLAR_AUTHOR_ID = "";
 
-  async function loadPublications() {
-    const container = document.getElementById("pubs-container");
-
-    if (!SEMANTIC_SCHOLAR_AUTHOR_ID) {
-      renderStaticPubs(container);
-      return;
-    }
-
-    try {
-      const url =
-        `https://api.semanticscholar.org/graph/v1/author/${SEMANTIC_SCHOLAR_AUTHOR_ID}` +
-        `?fields=papers.title,papers.year,papers.venue,papers.externalIds,papers.authors`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("API error");
-      const data = await res.json();
-
-      const papers = (data.papers || [])
-        .filter(p => p.year)
-        .sort((a, b) => b.year - a.year);
-
-      if (!papers.length) {
-        renderStaticPubs(container);
-        return;
-      }
-
-      const list = document.createElement("div");
-      list.className = "pub-list";
-
-      papers.forEach(paper => {
-        const doi = paper.externalIds && paper.externalIds.DOI;
-        const authors = (paper.authors || [])
-          .map(a => a.name === "Rohan Pankaj" ? `<strong>${a.name}</strong>` : a.name)
-          .join(", ");
-
-        list.innerHTML += `
-          <div class="pub-item">
-            <div class="pub-title">${paper.title}</div>
-            <div class="pub-authors">${authors}</div>
-            <div class="pub-venue">${paper.venue || ""}${paper.year ? " &middot; " + paper.year : ""}</div>
-            ${doi ? `<a href="https://doi.org/${doi}" target="_blank" rel="noopener" class="pub-link">DOI: ${doi} &rarr;</a>` : ""}
-          </div>`;
-      });
-
-      container.innerHTML = "";
-      container.appendChild(list);
-
-    } catch {
-      renderStaticPubs(container);
-    }
-  }
-
-  function renderStaticPubs(container) {
-    container.innerHTML = `
-      <div class="pub-list">
-        <div class="pub-item">
-          <div class="pub-title">
-            MC/DC: An accelerated Python package for fully transient neutron transport
-            and rapid methods development
-          </div>
-          <div class="pub-authors">
-            J. Morgan, I. Variansyah, S. Pasmann, K. Clements, B. Cuneo, A. Mote,
-            C. Goodman, C. Shaw, J. Northrop, <strong>R. Pankaj</strong>, E. Lame,
-            B. Whewell, R. McClarren, T. Palmer, L. Chen, D. Anistratov, C. Kelley,
-            C. Palmer, K. Niemeyer
-          </div>
-          <div class="pub-venue">Journal of Open Source Software &middot; April 2024</div>
-          <a href="https://doi.org/10.21105/joss.06415" target="_blank" rel="noopener" class="pub-link">
-            DOI: 10.21105/joss.06415 &rarr;
-          </a>
-        </div>
+async function loadPublications() {
+  const container = document.getElementById('pubs-container');
+  if (!SEMANTIC_SCHOLAR_AUTHOR_ID) { renderStaticPubs(container); return; }
+  try {
+    const res = await fetch(
+      `https://api.semanticscholar.org/graph/v1/author/${SEMANTIC_SCHOLAR_AUTHOR_ID}` +
+      `?fields=papers.title,papers.year,papers.venue,papers.externalIds,papers.authors`
+    );
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const papers = (data.papers || []).filter(p => p.year).sort((a, b) => b.year - a.year);
+    if (!papers.length) { renderStaticPubs(container); return; }
+    const list = document.createElement('div');
+    list.className = 'pub-list';
+    papers.forEach(p => {
+      const doi = p.externalIds && p.externalIds.DOI;
+      const authors = (p.authors || [])
+        .map(a => a.name === 'Rohan Pankaj' ? `<strong>${a.name}</strong>` : a.name)
+        .join(', ');
+      list.innerHTML += `<div class="pub-item">
+        <div class="pub-title">${p.title}</div>
+        <div class="pub-authors">${authors}</div>
+        <div class="pub-venue">${p.venue || ''}${p.year ? ' &middot; ' + p.year : ''}</div>
+        ${doi ? `<a href="https://doi.org/${doi}" target="_blank" rel="noopener" class="pub-link">DOI: ${doi} &rarr;</a>` : ''}
       </div>`;
-  }
+    });
+    container.innerHTML = '';
+    container.appendChild(list);
+  } catch { renderStaticPubs(container); }
+}
 
-  loadPublications();
+function renderStaticPubs(container) {
+  container.innerHTML = `<div class="pub-list"><div class="pub-item">
+    <div class="pub-title">MC/DC: An accelerated Python package for fully transient neutron transport and rapid methods development</div>
+    <div class="pub-authors">J. Morgan, I. Variansyah, S. Pasmann, K. Clements, B. Cuneo, A. Mote, C. Goodman, C. Shaw, J. Northrop, <strong>R. Pankaj</strong>, E. Lame, B. Whewell, R. McClarren, T. Palmer, L. Chen, D. Anistratov, C. Kelley, C. Palmer, K. Niemeyer</div>
+    <div class="pub-venue">Journal of Open Source Software &middot; April 2024</div>
+    <a href="https://doi.org/10.21105/joss.06415" target="_blank" rel="noopener" class="pub-link">DOI: 10.21105/joss.06415 &rarr;</a>
+  </div></div>`;
+}
+
+loadPublications();
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>
 
 </body>

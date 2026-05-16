@@ -15,6 +15,8 @@
     <ul class="nav-links">
       <li><a href="about.html">About</a></li>
       <li><a href="research.html">Research</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="experience.html">Experience</a></li>
       <li><a href="writing.html">Writing</a></li>
     </ul>
   </div>
@@ -24,18 +26,25 @@
   <div class="container">
 
     <section class="hero">
-      <h1>Rohan Pankaj</h1>
-      <p class="tagline">Electrical Engineering &amp; Public Affairs &middot; Brown University &rsquo;26</p>
-      <span class="accent-rule"></span>
-      <p class="hero-bio">
-        I work at the intersection of quantum computing, hardware, and science policy.
-        At Brown I study how emerging technologies are built and how they are governed —
-        and I am interested in how quantum systems will reshape both fields.
-        I am currently seeking PhD programs and full-time roles in hardware development.
-      </p>
+      <div class="hero-inner">
+        <div class="hero-text">
+          <h1>Rohan Pankaj</h1>
+          <p class="tagline">Electrical Engineering &amp; Public Affairs &middot; Brown University &rsquo;26</p>
+          <span class="accent-rule"></span>
+          <p class="hero-bio">
+            I work at the intersection of quantum computing, hardware, and science policy.
+            At Brown I study how emerging technologies are built and how they are governed.
+            I am currently seeking PhD programs and full-time roles in hardware development.
+          </p>
+        </div>
+        <div class="hero-visual">
+          <canvas id="bloch"></canvas>
+          <span class="bloch-label">Bloch Sphere</span>
+        </div>
+      </div>
     </section>
 
-    <section class="section">
+    <section class="section fade-in">
       <div class="section-header">
         <h2>Writing</h2>
         <a href="writing.html" class="see-all">All writing &rarr;</a>
@@ -71,17 +80,10 @@
           </div>
           <span class="date">Oct 2023</span>
         </div>
-        <div class="writing-item">
-          <div class="writing-item-left">
-            <span class="source">Brown Political Review</span>
-            <a href="https://brownpoliticalreview.org/author/rpankaj/" target="_blank" rel="noopener">NASA in the Age of Commercialized Space</a>
-          </div>
-          <span class="date">Mar 2023</span>
-        </div>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section fade-in">
       <div class="section-header">
         <h2>Research</h2>
         <a href="research.html" class="see-all">All research &rarr;</a>
@@ -90,24 +92,12 @@
         <div class="project-card">
           <div class="project-card-top">
             <h3>MC/DC &mdash; Monte Carlo Neutron Transport</h3>
-            <span class="project-org">CEMeNT / PSA&shy;AP</span>
+            <span class="project-org">CEMeNT &middot; DOE PSAAP</span>
           </div>
-          <p>
-            A performant, scalable, and machine-portable Python-based Monte Carlo neutron
-            transport code. I contributed to its development as part of the Center for
-            Exascale Monte Carlo Neutron Transport.
-          </p>
+          <p>A performant, scalable, machine-portable Python package for fully transient
+          Monte Carlo neutron transport. Contributed to the codebase and co-authored the
+          Journal of Open Source Software publication.</p>
           <a href="https://cement-psaap.github.io/" target="_blank" rel="noopener" class="project-link">cement-psaap.github.io &rarr;</a>
-        </div>
-        <div class="project-card">
-          <div class="project-card-top">
-            <h3>NBA Game Score Prediction</h3>
-            <span class="project-org">Personal project &middot; 2021</span>
-          </div>
-          <p>
-            Machine learning system for forecasting professional basketball game outcomes.
-            An early exploration of applied ML on structured sports data.
-          </p>
         </div>
       </div>
     </section>
@@ -125,6 +115,136 @@
     </div>
   </div>
 </footer>
+
+<script>
+/* ── Bloch Sphere Animation ── */
+(function () {
+  const canvas = document.getElementById('bloch');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  const SIZE = window.innerWidth < 600 ? 150 : 200;
+  canvas.width = SIZE * DPR;
+  canvas.height = SIZE * DPR;
+  canvas.style.width = SIZE + 'px';
+  canvas.style.height = SIZE + 'px';
+  ctx.scale(DPR, DPR);
+
+  const R = SIZE * 0.38;
+  const cx = SIZE / 2, cy = SIZE / 2;
+  const AZ = 0.65, EL = 0.38;
+
+  function proj(x, y, z) {
+    const rx = x * Math.cos(AZ) - y * Math.sin(AZ);
+    const ry = x * Math.sin(AZ) + y * Math.cos(AZ);
+    const sx = cx + R * rx;
+    const fz = ry * Math.sin(EL) + z * Math.cos(EL);
+    const sy = cy - R * (ry * Math.cos(EL) - z * Math.sin(EL));
+    return [sx, sy, fz];
+  }
+
+  function drawCirclePoints(pts) {
+    for (let i = 0; i < pts.length - 1; i++) {
+      const depth = (pts[i][2] + pts[i + 1][2]) / 2;
+      ctx.strokeStyle = `rgba(160,160,160,${depth >= 0 ? 0.28 : 0.07})`;
+      ctx.beginPath();
+      ctx.moveTo(pts[i][0], pts[i][1]);
+      ctx.lineTo(pts[i + 1][0], pts[i + 1][1]);
+      ctx.stroke();
+    }
+  }
+
+  function latPts(zv, N = 64) {
+    const r = Math.sqrt(Math.max(0, 1 - zv * zv));
+    return Array.from({ length: N + 1 }, (_, i) => {
+      const a = (i / N) * 2 * Math.PI;
+      return proj(r * Math.cos(a), r * Math.sin(a), zv);
+    });
+  }
+
+  function lonPts(phi, N = 64) {
+    return Array.from({ length: N + 1 }, (_, i) => {
+      const th = (i / N) * Math.PI;
+      return proj(Math.sin(th) * Math.cos(phi), Math.sin(th) * Math.sin(phi), Math.cos(th));
+    });
+  }
+
+  let t = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.lineWidth = 0.6;
+
+    // Latitude lines
+    [-0.7, -0.35, 0, 0.35, 0.7].forEach(z => drawCirclePoints(latPts(z)));
+
+    // Longitude lines
+    [0, Math.PI / 4, Math.PI / 2, 3 * Math.PI / 4,
+      Math.PI, 5 * Math.PI / 4, 3 * Math.PI / 2, 7 * Math.PI / 4
+    ].forEach(p => drawCirclePoints(lonPts(p)));
+
+    // Z axis
+    const [ax, ay] = proj(0, 0, 1.18);
+    const [bx, by] = proj(0, 0, -1.18);
+    ctx.strokeStyle = 'rgba(120,120,120,0.4)';
+    ctx.lineWidth = 0.7;
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+
+    // Labels
+    ctx.fillStyle = 'rgba(100,100,100,0.6)';
+    ctx.font = `${Math.round(SIZE * 0.054)}px system-ui, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('|0⟩', ax, ay + 3);
+    ctx.fillText('|1⟩', bx, by + 10);
+
+    // State vector
+    const theta = Math.PI / 3.4;
+    const [vx, vy, vz] = [
+      Math.sin(theta) * Math.cos(t),
+      Math.sin(theta) * Math.sin(t),
+      Math.cos(theta)
+    ];
+    const [svx, svy] = proj(vx, vy, vz);
+    const [eqx, eqy] = proj(vx, vy, 0);
+
+    // Projection dashes
+    ctx.strokeStyle = 'rgba(139,26,26,0.18)';
+    ctx.lineWidth = 0.7;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(eqx, eqy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(eqx, eqy); ctx.lineTo(svx, svy); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Main vector
+    ctx.strokeStyle = '#8B1A1A';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(svx, svy); ctx.stroke();
+
+    // Arrowhead
+    const ang = Math.atan2(svy - cy, svx - cx);
+    const aLen = SIZE * 0.038;
+    ctx.fillStyle = '#8B1A1A';
+    ctx.beginPath();
+    ctx.moveTo(svx, svy);
+    ctx.lineTo(svx - aLen * Math.cos(ang - 0.36), svy - aLen * Math.sin(ang - 0.36));
+    ctx.lineTo(svx - aLen * Math.cos(ang + 0.36), svy - aLen * Math.sin(ang + 0.36));
+    ctx.closePath();
+    ctx.fill();
+
+    t += 0.007;
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+
+/* ── Scroll fade-in ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
 
 </body>
 </html>

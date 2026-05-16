@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm --version)"
+      "Bash(npm --version)",
+      "Bash(cp \"c:/Users/rohan/Dropbox/Projects/Personal Website/photos/Screenshot_20250203_164340_WhatsApp \\(1\\).jpg\" \"c:/Users/rohan/Dropbox/Projects/Personal Website/photos/headshot.jpg\")",
+      "Bash(cp \"c:/Users/rohan/Dropbox/Projects/Personal Website/photos/20250911_115953.jpg\" \"c:/Users/rohan/Dropbox/Projects/Personal Website/photos/lab.jpg\")",
+      "Bash(python3 -c ' *)",
+      "Bash(python -c ' *)"
     ]
   }
 }
