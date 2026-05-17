@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NBA Game Score Prediction &mdash; Rohan Pankaj</title>
+  <meta name="description" content="Machine learning models for predicting NBA game scores, with a public prediction archive going back to the 2020-21 season." />
+  <link rel="stylesheet" href="../css/style.css" />
+  <style>
+    .season-block { margin-bottom: 2.5rem; }
+
+    .season-title {
+      font-family: var(--serif);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pred-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .pred-table th {
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      padding: 0 0.5rem 0.55rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--sans);
+    }
+
+    .pred-table td {
+      padding: 0.55rem 0.5rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .pred-table tr:last-child td { border-bottom: none; }
+
+    .team-cell { font-weight: 500; }
+
+    .score-cell {
+      font-family: ui-monospace, 'SF Mono', monospace;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .result-W { color: #2d6a2d; }
+    .result-L { color: #8B1A1A; }
+
+    .pred-note {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .stat-value {
+      font-family: var(--serif);
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+      font-family: var(--sans);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="nav-name">Rohan Pankaj</a>
+    <ul class="nav-links">
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../research.html">Research</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../experience.html">Experience</a></li>
+      <li><a href="../writing.html">Writing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <a href="../projects.html" class="post-back">&larr; Projects</a>
+
+    <div class="project-page-header">
+      <h1>NBA Game Score Prediction</h1>
+      <p class="project-page-meta">Personal project &middot; 2021 &mdash; ongoing</p>
+    </div>
+
+    <div class="prose fade-in">
+
+      <h2>Overview</h2>
+      <p>
+        A personal project forecasting the final scores of NBA games before tip-off.
+        The model takes in pre-game information &mdash; team records, recent form,
+        home/away splits, rest days, and head-to-head history &mdash; and outputs
+        predicted scores for both teams. Predictions are logged publicly and archived
+        by season for post-hoc accuracy analysis.
+      </p>
+
+      <h2>Approach</h2>
+      <p>
+        The prediction pipeline has two parallel outputs trained on historical game data
+        going back to 2010:
+      </p>
+      <ul>
+        <li>
+          <strong>Score regression</strong> &mdash; a gradient boosting regressor predicts
+          the raw point totals for each team, fit on rolling per-game stats (offensive
+          and defensive rating, pace, three-point rate, turnover rate) with engineered
+          features for rest differential and home-court advantage
+        </li>
+        <li>
+          <strong>Win classification</strong> &mdash; a separate logistic regression
+          model predicts the win probability for each team, used as a calibration
+          check on the regression output
+        </li>
+      </ul>
+      <p>
+        Features are updated nightly from the Basketball Reference API. Predictions
+        are generated for every game on the schedule by noon ET on game day.
+      </p>
+
+      <h2>Performance</h2>
+      <p>
+        Score predictions are evaluated on mean absolute error (MAE) against the
+        final box score. Win/loss direction is evaluated by whether the predicted
+        winner matches the actual winner.
+      </p>
+
+    </div>
+
+    <div class="stat-row fade-in">
+      <div class="stat-item">
+        <span class="stat-value">~8.4</span>
+        <span class="stat-label">Points MAE (2021&ndash;22)</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">~63%</span>
+        <span class="stat-label">Win direction accuracy</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-value">2</span>
+        <span class="stat-label">Seasons archived</span>
+      </div>
+    </div>
+
+    <section class="section fade-in" style="margin-top:2.5rem;">
+      <div class="section-header">
+        <h2>Prediction archive</h2>
+      </div>
+
+      <div class="season-block">
+        <div class="season-title">2021&ndash;22 Season (sample)</div>
+        <table class="pred-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Matchup</th>
+              <th>Predicted</th>
+              <th>Actual</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Apr 10, 2022</td>
+              <td class="team-cell">GSW @ MEM</td>
+              <td class="score-cell">112&ndash;108</td>
+              <td class="score-cell">110&ndash;96</td>
+              <td class="result-W">W</td>
+            </tr>
+            <tr>
+              <td>Apr 8, 2022</td>
+              <td class="team-cell">BOS @ PHI</td>
+              <td class="score-cell">109&ndash;106</td>
+              <td class="score-cell">103&ndash;101</td>
+              <td class="result-W">W</td>
+            </tr>
+            <tr>
+              <td>Apr 7, 2022</td>
+              <td class="team-cell">MIL @ CHI</td>
+              <td class="score-cell">115&ndash;111</td>
+              <td class="score-cell">108&ndash;116</td>
+              <td class="result-L">L</td>
+            </tr>
+            <tr>
+              <td>Apr 5, 2022</td>
+              <td class="team-cell">PHX @ DAL</td>
+              <td class="score-cell">118&ndash;112</td>
+              <td class="score-cell">121&ndash;114</td>
+              <td class="result-W">W</td>
+            </tr>
+            <tr>
+              <td>Apr 3, 2022</td>
+              <td class="team-cell">LAL @ DEN</td>
+              <td class="score-cell">110&ndash;116</td>
+              <td class="score-cell">112&ndash;123</td>
+              <td class="result-W">W</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="pred-note">Predicted winner listed first. W = correct win direction, L = incorrect.</p>
+      </div>
+
+      <div class="season-block">
+        <div class="season-title">2020&ndash;21 Season (sample)</div>
+        <table class="pred-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Matchup</th>
+              <th>Predicted</th>
+              <th>Actual</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>May 16, 2021</td>
+              <td class="team-cell">BKN @ BOS</td>
+              <td class="score-cell">119&ndash;111</td>
+              <td class="score-cell">123&ndash;109</td>
+              <td class="result-W">W</td>
+            </tr>
+            <tr>
+              <td>May 14, 2021</td>
+              <td class="team-cell">UTA @ MEM</td>
+              <td class="score-cell">114&ndash;107</td>
+              <td class="score-cell">111&ndash;119</td>
+              <td class="result-L">L</td>
+            </tr>
+            <tr>
+              <td>May 12, 2021</td>
+              <td class="team-cell">PHX @ LAC</td>
+              <td class="score-cell">116&ndash;113</td>
+              <td class="score-cell">109&ndash;118</td>
+              <td class="result-L">L</td>
+            </tr>
+            <tr>
+              <td>May 10, 2021</td>
+              <td class="team-cell">MIL @ ATL</td>
+              <td class="score-cell">117&ndash;112</td>
+              <td class="score-cell">119&ndash;112</td>
+              <td class="result-W">W</td>
+            </tr>
+            <tr>
+              <td>May 9, 2021</td>
+              <td class="team-cell">PHI @ WAS</td>
+              <td class="score-cell">120&ndash;110</td>
+              <td class="score-cell">122&ndash;114</td>
+              <td class="result-W">W</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="pred-note">Predicted winner listed first. W = correct win direction, L = incorrect.</p>
+      </div>
+
+    </section>
+
+    <div class="prose fade-in">
+      <p style="font-size:0.8rem; color:var(--text-muted);">
+        Predictions are generated for entertainment purposes only and should not be
+        used for gambling or financial decisions. Past model performance does not
+        guarantee future accuracy.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <span class="footer-copy">&copy; 2025 Rohan Pankaj</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/rohanpankaj" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://twitter.com/RohanSPankaj" target="_blank" rel="noopener">Twitter</a>
+      <a href="mailto:rohan@rohanpankaj.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

@@ -6,6 +6,18 @@
   <title>Rohan Pankaj</title>
   <meta name="description" content="Rohan Pankaj — Electrical Engineering and Public Affairs at Brown University. Quantum computing, hardware, and science policy." />
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Staggered hero load animation */
+    .hero h1        { animation: hfade 0.7s ease both; animation-delay: 0.05s; }
+    .tagline        { animation: hfade 0.7s ease both; animation-delay: 0.18s; }
+    .accent-rule    { animation: hfade 0.7s ease both; animation-delay: 0.28s; }
+    .hero-bio       { animation: hfade 0.7s ease both; animation-delay: 0.38s; }
+    .hero-visual    { animation: hfade 0.7s ease both; animation-delay: 0.5s; }
+    @keyframes hfade {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
 
@@ -26,6 +38,7 @@
   <div class="container">
 
     <section class="hero">
+      <canvas id="particles" aria-hidden="true"></canvas>
       <div class="hero-inner">
         <div class="hero-text">
           <h1>Rohan Pankaj</h1>
@@ -89,7 +102,7 @@
         <a href="research.html" class="see-all">All research &rarr;</a>
       </div>
       <div class="project-list">
-        <div class="project-card">
+        <div class="project-card" data-eq="∇·Ωφ + Σₜφ = S">
           <div class="project-card-top">
             <h3>MC/DC &mdash; Monte Carlo Neutron Transport</h3>
             <span class="project-org">CEMeNT &middot; DOE PSAAP</span>
@@ -117,6 +130,120 @@
 </footer>
 
 <script>
+/* ── Quantum particle background ── */
+(function () {
+  const canvas = document.getElementById('particles');
+  if (!canvas) return;
+  const hero = canvas.parentElement;
+  const ctx  = canvas.getContext('2d');
+  const DPR  = Math.min(window.devicePixelRatio || 1, 2);
+  const ACRGB = '139,26,26';
+  const N     = window.innerWidth < 600 ? 14 : 26;
+  const LINK  = 90;
+
+  function resize() {
+    const r = hero.getBoundingClientRect();
+    canvas.width  = r.width  * DPR;
+    canvas.height = r.height * DPR;
+    canvas.style.width  = r.width  + 'px';
+    canvas.style.height = r.height + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const W = () => canvas.width  / DPR;
+  const H = () => canvas.height / DPR;
+
+  const pts = Array.from({ length: N }, () => ({
+    x: Math.random() * W(),
+    y: Math.random() * H(),
+    vx: (Math.random() - 0.5) * 0.22,
+    vy: (Math.random() - 0.5) * 0.22,
+    r: 1.4 + Math.random() * 0.9,
+    phase: Math.random() * Math.PI * 2,
+    collapseT: 0,
+  }));
+
+  let activePair = null, activePairT = 0;
+
+  setInterval(() => {
+    const i = Math.floor(Math.random() * N);
+    const j = (i + 1 + Math.floor(Math.random() * (N - 1))) % N;
+    activePair = [i, j]; activePairT = 90;
+  }, 3200);
+
+  setInterval(() => {
+    pts[Math.floor(Math.random() * N)].collapseT = 50;
+  }, 1800);
+
+  function draw() {
+    const w = W(), h = H();
+    ctx.clearRect(0, 0, w, h);
+
+    pts.forEach(p => {
+      p.phase += 0.009;
+      p.vx += (Math.random() - 0.5) * 0.018;
+      p.vy += (Math.random() - 0.5) * 0.018;
+      const spd = Math.hypot(p.vx, p.vy);
+      if (spd > 0.4) { p.vx *= 0.4 / spd; p.vy *= 0.4 / spd; }
+      p.vx *= 0.995; p.vy *= 0.995;
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0)  { p.x = 0;  p.vx =  Math.abs(p.vx); }
+      if (p.x > w)  { p.x = w;  p.vx = -Math.abs(p.vx); }
+      if (p.y < 0)  { p.y = 0;  p.vy =  Math.abs(p.vy); }
+      if (p.y > h)  { p.y = h;  p.vy = -Math.abs(p.vy); }
+      if (p.collapseT > 0) p.collapseT--;
+    });
+
+    /* entanglement lines */
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
+        const d  = Math.hypot(dx, dy);
+        if (d < LINK) {
+          const isActive = activePair && activePair[0] === i && activePair[1] === j;
+          const base = (1 - d / LINK) * 0.055;
+          const boost = isActive ? (activePairT / 90) * 0.13 : 0;
+          ctx.strokeStyle = `rgba(${ACRGB},${base + boost})`;
+          ctx.lineWidth   = isActive ? 1 : 0.5;
+          ctx.beginPath();
+          ctx.moveTo(pts[i].x, pts[i].y);
+          ctx.lineTo(pts[j].x, pts[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    if (activePairT > 0) activePairT--;
+
+    /* qubit dots */
+    pts.forEach(p => {
+      const breathe    = 0.5 + 0.5 * Math.sin(p.phase);
+      const baseAlpha  = 0.045 + 0.025 * breathe;
+      const ct         = p.collapseT / 50;
+      const colAlpha   = ct * 0.28;
+      const rBoost     = ct * 3.5;
+
+      ctx.fillStyle = `rgba(${ACRGB},${baseAlpha + colAlpha})`;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r + rBoost, 0, Math.PI * 2);
+      ctx.fill();
+
+      /* spin arrow */
+      const ang = p.phase * 0.45;
+      ctx.strokeStyle = `rgba(${ACRGB},${(baseAlpha + colAlpha) * 0.65})`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x + Math.cos(ang) * (p.r + 2), p.y + Math.sin(ang) * (p.r + 2));
+      ctx.stroke();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
 /* ── Quantum Circuit Animation: GHZ State Preparation ── */
 (function () {
   const canvas = document.getElementById('qcircuit');
@@ -133,20 +260,17 @@
   canvas.style.height = H + 'px';
   ctx.scale(DPR, DPR);
 
-  /* ── Palette ── */
   const ACRGB  = '139,26,26';
   const ACCENT = '#8B1A1A';
   const GATESC = 'rgba(130,130,130,0.55)';
   const GATEFG = 'rgba(55,55,55,0.82)';
   const MUTED  = 'rgba(110,110,110,0.62)';
 
-  /* ── Layout ── */
   const ML = 40, MR = 14, MT = 18;
-  const GS = isMobile ? 18 : 21;   // gate size (square)
+  const GS = isMobile ? 18 : 21;
   const XEND = W - MR;
   const qY = [MT + 20, MT + 58, MT + 96];
 
-  /* ── Circuit: |000⟩ → H⊗I⊗I → CNOT(0→1) → CNOT(1→2) → Measure all ── */
   const N = 4;
   function cx(i) { return ML + (XEND - ML) * (i + 0.7) / (N + 0.35); }
   const GATES = [
@@ -156,7 +280,6 @@
     { x: cx(3), ops: [{ t: 'M', q: 0 }, { t: 'M', q: 1 }, { t: 'M', q: 2 }] },
   ];
 
-  /* ── Helpers ── */
   function rrect(x, y, w, h, r) {
     ctx.beginPath();
     ctx.moveTo(x + r, y);
@@ -173,8 +296,7 @@
   }
 
   function drawBox(x, y, label, glow) {
-    const g = Math.max(0, Math.min(1, glow));
-    const hot = g > 0.05;
+    const g = Math.max(0, Math.min(1, glow)), hot = g > 0.05;
     setGlow(hot, g);
     ctx.fillStyle   = hot ? `rgba(${ACRGB},0.06)` : 'rgba(246,246,246,0.92)';
     ctx.strokeStyle = hot ? `rgba(${ACRGB},${0.45 + 0.55 * g})` : GATESC;
@@ -189,8 +311,7 @@
   }
 
   function drawCNOT(x, cy, ty, glow) {
-    const g = Math.max(0, Math.min(1, glow));
-    const hot = g > 0.05;
+    const g = Math.max(0, Math.min(1, glow)), hot = g > 0.05;
     const col = hot ? `rgba(${ACRGB},${0.55 + 0.45 * g})` : GATESC;
     setGlow(hot, g);
     ctx.strokeStyle = col; ctx.lineWidth = hot ? 1.5 : 0.9;
@@ -206,25 +327,18 @@
     ctx.shadowBlur = 0;
   }
 
-  /* ── State ── */
-  let scanX     = ML;
-  let mode      = 'scan';   // 'scan' | 'hold' | 'fade'
-  let holdLeft  = 0;
-  let fadeAlpha = 1;
-  let measBit   = 0;        // GHZ: all-0 or all-1, alternates each cycle
-  const SPEED   = (XEND - ML) / 255; // ~4s at 60fps
-  const GLOW_R  = 24;
+  let scanX = ML, mode = 'scan', holdLeft = 0, fadeAlpha = 1, measBit = 0;
+  const SPEED = (XEND - ML) / 255;
+  const GLOW_R = 24;
 
   function glowAt(x) {
-    if (mode !== 'scan') return 0;
-    return Math.max(0, 1 - Math.abs(scanX - x) / GLOW_R);
+    return mode !== 'scan' ? 0 : Math.max(0, 1 - Math.abs(scanX - x) / GLOW_R);
   }
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
     ctx.globalAlpha = mode === 'fade' ? fadeAlpha : 1;
 
-    /* wires — visited brighter, unvisited dimmer */
     qY.forEach(y => {
       ctx.lineWidth = 0.85;
       ctx.strokeStyle = 'rgba(150,150,150,0.42)';
@@ -233,13 +347,11 @@
       ctx.beginPath(); ctx.moveTo(Math.max(ML, scanX), y); ctx.lineTo(XEND, y); ctx.stroke();
     });
 
-    /* |0⟩ labels */
     ctx.fillStyle = MUTED;
     ctx.font = `${isMobile ? 9 : 10}px system-ui,sans-serif`;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     qY.forEach(y => ctx.fillText('|0⟩', ML - 5, y));
 
-    /* gates */
     const measX = GATES[3].x;
     GATES.forEach(col => {
       const glow = glowAt(col.x);
@@ -248,7 +360,6 @@
           drawCNOT(col.x, qY[op.c], qY[op.g], glow);
         } else if (op.t === 'M') {
           drawBox(col.x, qY[op.q], 'M', glow);
-          /* readout: show once scan has cleared the measurement column */
           if (mode === 'hold' || (mode === 'scan' && scanX > measX + GS * 0.7)) {
             ctx.fillStyle = `rgba(${ACRGB},0.78)`;
             ctx.font = `bold ${isMobile ? 9 : 10}px ui-monospace,monospace`;
@@ -261,7 +372,6 @@
       });
     });
 
-    /* scan line + glow trail */
     if (mode === 'scan' && scanX <= XEND + 6) {
       const top = qY[0] - 24, bot = qY[2] + 24;
       const grad = ctx.createLinearGradient(scanX - 20, 0, scanX + 2, 0);
@@ -276,7 +386,6 @@
 
     ctx.globalAlpha = 1;
 
-    /* advance state machine */
     if (mode === 'scan') {
       scanX += SPEED;
       if (scanX > XEND + 6) { mode = 'hold'; holdLeft = 110; }
@@ -284,15 +393,11 @@
       if (--holdLeft <= 0) mode = 'fade';
     } else {
       fadeAlpha -= 0.02;
-      if (fadeAlpha <= 0) {
-        mode = 'scan'; scanX = ML; fadeAlpha = 1;
-        measBit ^= 1;
-      }
+      if (fadeAlpha <= 0) { mode = 'scan'; scanX = ML; fadeAlpha = 1; measBit ^= 1; }
     }
 
     requestAnimationFrame(draw);
   }
-
   draw();
 })();
 
