@@ -18,8 +18,6 @@
   --max-w: 800px;
   --serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --mx: -9999px;
-  --my: -9999px;
 }
 
 html {
@@ -37,20 +35,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-/* Cursor spotlight — uses --mx / --my set by js/main.js */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    500px circle at var(--mx) var(--my),
-    rgba(var(--accent-rgb), 0.045),
-    transparent 40%
-  );
-  z-index: 9999;
 }
 
 /* ── Layout ── */
@@ -279,29 +263,41 @@ a { color: var(--accent); }
   letter-spacing: 0.01em;
 }
 
+/* Typewriter container */
+.hero-bio-wrap {
+  max-width: 44ch;
+}
+
 .hero-bio {
   font-size: 0.96rem;
   line-height: 1.78;
   color: var(--text);
-  max-width: 44ch;
 }
 
-/* ── Quantum circuit canvas — floating card treatment ── */
-#qcircuit {
+/* Blinking cursor */
+.tw-cursor {
+  color: var(--accent);
+  font-weight: 300;
+  animation: tw-blink 0.9s step-end infinite;
+  margin-left: 1px;
+  user-select: none;
+}
+
+@keyframes tw-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Hero profile photo */
+.hero-photo {
+  width: 165px;
+  height: 165px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+  border: 3px solid var(--accent);
+  box-shadow: 0 6px 32px rgba(220, 38, 38, 0.14), 0 2px 10px rgba(0, 0, 0, 0.08);
   display: block;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.07), 0 1px 6px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(6px);
-}
-
-.bloch-label {
-  font-size: 0.62rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 0.65rem;
-  text-align: center;
 }
 
 /* ── Profile photo (about page) ── */
@@ -399,6 +395,83 @@ a { color: var(--accent); }
   vertical-align: middle;
   margin-left: 0.4rem;
   border: 1px solid var(--border);
+}
+
+/* ── Highlight strip (homepage) ── */
+.highlight-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.highlight-item {
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: border-color 0.22s ease, transform 0.22s ease;
+  cursor: default;
+}
+
+.highlight-item:hover {
+  border-color: rgba(var(--accent-rgb), 0.3);
+  transform: translateY(-2px);
+}
+
+.highlight-num {
+  font-family: var(--serif);
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.highlight-label {
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-top: 0.2rem;
+}
+
+.highlight-sub {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+/* ── Project grid (projects page) ── */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Award / featured card spans full width */
+.project-card-award {
+  grid-column: 1 / -1;
+  background: var(--accent-light);
+  border-color: rgba(var(--accent-rgb), 0.18);
+}
+
+.project-card-award:hover {
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+.project-award-badge {
+  display: inline-block;
+  font-size: 0.64rem;
+  padding: 0.18rem 0.6rem;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 20px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: var(--sans);
 }
 
 /* ── Project cards ── */
@@ -882,7 +955,11 @@ a { color: var(--accent); }
     align-items: flex-start;
   }
 
-  .hero-visual { align-self: center; }
+  /* Photo slides above text on mobile */
+  .hero-visual { order: -1; align-self: center; }
+  .hero-text { order: 1; }
+
+  .hero-photo { width: 120px; height: 120px; }
 
   .nav-links { gap: 0.2rem 1.1rem; }
 
@@ -913,4 +990,8 @@ a { color: var(--accent); }
 
   .page-title { font-size: 2.25rem; }
   .page-main { padding: 2.5rem 0 4rem; }
+
+  .highlight-strip { grid-template-columns: 1fr; gap: 0.75rem; }
+  .project-grid { grid-template-columns: 1fr; }
+  .project-card-award { grid-column: 1; }
 }

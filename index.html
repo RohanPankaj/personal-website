@@ -7,12 +7,11 @@
   <meta name="description" content="Rohan Pankaj — Electrical Engineering and Public Affairs at Brown University. Quantum computing, hardware, and science policy." />
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* Staggered hero load animation */
-    .hero h1      { animation: hfade 0.7s ease both; animation-delay: 0.05s; }
-    .tagline      { animation: hfade 0.7s ease both; animation-delay: 0.2s; }
-    .accent-rule  { animation: hfade 0.7s ease both; animation-delay: 0.3s; }
-    .hero-bio     { animation: hfade 0.7s ease both; animation-delay: 0.4s; }
-    .hero-visual  { animation: hfade 0.7s ease both; animation-delay: 0.52s; }
+    .hero h1        { animation: hfade 0.7s ease both; animation-delay: 0.05s; }
+    .tagline        { animation: hfade 0.7s ease both; animation-delay: 0.2s; }
+    .accent-rule    { animation: hfade 0.7s ease both; animation-delay: 0.3s; }
+    .hero-bio-wrap  { animation: hfade 0.7s ease both; animation-delay: 0.4s; }
+    .hero-visual    { animation: hfade 0.7s ease both; animation-delay: 0.5s; }
     @keyframes hfade {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -36,32 +35,52 @@
 
 <main>
 
-  <!-- Hero: full-width section, particle canvas fills the whole area -->
   <section class="hero">
     <canvas id="particles" aria-hidden="true"></canvas>
     <div class="container">
       <div class="hero-inner">
+
         <div class="hero-text">
           <h1>Rohan<br>Pankaj</h1>
           <p class="tagline">Electrical Engineering &amp; Public Affairs &middot; Brown University &rsquo;26</p>
           <span class="accent-rule"></span>
-          <p class="hero-bio">
-            I work at the intersection of quantum computing, hardware, and science policy.
-            At Brown I study how emerging technologies are built and how they are governed.
-            I am currently seeking PhD programs and full-time roles in hardware development.
-          </p>
+          <div class="hero-bio-wrap">
+            <span id="typewriter-out" class="hero-bio"></span><span class="tw-cursor" aria-hidden="true">|</span>
+          </div>
         </div>
+
         <div class="hero-visual">
-          <canvas id="qcircuit"></canvas>
-          <span class="bloch-label">GHZ State Circuit</span>
+          <img src="photos/headshot.jpg" alt="Rohan Pankaj" class="hero-photo" />
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Content sections sit below the full-width hero -->
   <div class="container page-content">
 
+    <!-- Key highlights -->
+    <section class="section fade-in">
+      <div class="highlight-strip">
+        <div class="highlight-item">
+          <span class="highlight-num">1st</span>
+          <span class="highlight-label">MIT iQuHACK 2026</span>
+          <span class="highlight-sub">Quantum circuit fidelity prediction with CNN &amp; GNN</span>
+        </div>
+        <div class="highlight-item">
+          <span class="highlight-num">CERN</span>
+          <span class="highlight-label">Summer Research &rsquo;24</span>
+          <span class="highlight-sub">ML on CMS detector data &middot; Geneva, Switzerland</span>
+        </div>
+        <div class="highlight-item">
+          <span class="highlight-num">JOSS</span>
+          <span class="highlight-label">Published 2024</span>
+          <span class="highlight-sub">Co-author on MC/DC neutron transport package</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Writing -->
     <section class="section fade-in">
       <div class="section-header">
         <h2>Writing</h2>
@@ -101,22 +120,60 @@
       </div>
     </section>
 
+    <!-- Selected projects -->
     <section class="section fade-in">
       <div class="section-header">
-        <h2>Research</h2>
-        <a href="research.html" class="see-all">All research &rarr;</a>
+        <h2>Selected Projects</h2>
+        <a href="projects.html" class="see-all">All projects &rarr;</a>
       </div>
-      <div class="project-list">
-        <div class="project-card" data-eq="∇·Ωφ + Σₜφ = S">
+      <div class="project-grid">
+
+        <div class="project-card project-card-award" data-eq="|ψ⟩ = Σ αᵢ|i⟩">
           <div class="project-card-top">
-            <h3>MC/DC &mdash; Monte Carlo Neutron Transport</h3>
-            <span class="project-org">CEMeNT &middot; DOE PSAAP</span>
+            <h3>Quantum Circuit Fidelity Prediction</h3>
+            <span class="project-award-badge">1st Place &middot; MIT iQuHACK</span>
           </div>
-          <p>A performant, scalable, machine-portable Python package for fully transient
-          Monte Carlo neutron transport. Contributed to the codebase and co-authored the
-          Journal of Open Source Software publication.</p>
-          <a href="https://cement-psaap.github.io/" target="_blank" rel="noopener" class="project-link">cement-psaap.github.io &rarr;</a>
+          <p>Built complementary CNN and GNN models to predict the fidelity and runtime of quantum circuit simulations on the Quantum Rings platform. Won first place at MIT&rsquo;s annual quantum hackathon.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">CNN</span>
+            <span class="skill-tag">GNN</span>
+            <span class="skill-tag">Quantum circuits</span>
+          </div>
+          <br/>
+          <a href="https://github.com/woody-hulse/quantum-rings" target="_blank" rel="noopener" class="project-link">github.com/woody-hulse/quantum-rings &rarr;</a>
         </div>
+
+        <div class="project-card" data-eq="F = αP² + βP⁴ − E·P">
+          <div class="project-card-top">
+            <h3>FeSim</h3>
+            <span class="project-org">Open source</span>
+          </div>
+          <p>Python desktop app for simulating ferroelectric capacitor hysteresis using Landau-Ginzburg-Devonshire theory. Supports HZO, PZT, and BaTiO₃ with CSV import and automated parameter extraction.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">Python</span>
+            <span class="skill-tag">LGD theory</span>
+            <span class="skill-tag">Ferroelectrics</span>
+          </div>
+          <br/>
+          <a href="https://github.com/RohanPankaj/FeSim" target="_blank" rel="noopener" class="project-link">github.com/RohanPankaj/FeSim &rarr;</a>
+        </div>
+
+        <div class="project-card" data-eq="I = I₀(e^qV/nkT − 1)">
+          <div class="project-card-top">
+            <h3>Semiconductor Device Fabrication</h3>
+            <span class="project-org">Brown EE Cleanroom</span>
+          </div>
+          <p>Full pn-junction diode fabrication — maskless lithography, wet etching, furnace annealing at 1000°C, e-beam evaporation, and lift-off. 75% device yield via Statistical Process Control.</p>
+          <div class="skill-tags">
+            <span class="skill-tag">KLayout</span>
+            <span class="skill-tag">Cleanroom</span>
+            <span class="skill-tag">E-beam evaporation</span>
+          </div>
+          <br/>
+          <a href="projects/semiconductor.html" class="project-link">View project &rarr;</a>
+        </div>
+
       </div>
     </section>
 
@@ -136,14 +193,14 @@
 
 <script src="js/main.js"></script>
 <script>
-/* ── Quantum particle background — spans the full hero width ── */
+/* ── Quantum particle background ── */
 (function () {
   const canvas = document.getElementById('particles');
   if (!canvas) return;
-  const hero = canvas.parentElement; /* .hero section */
+  const hero = canvas.parentElement;
   const ctx  = canvas.getContext('2d');
   const DPR  = Math.min(window.devicePixelRatio || 1, 2);
-  const ACRGB = '220,38,38'; /* matches --accent */
+  const ACRGB = '220,38,38';
   const N     = window.innerWidth < 640 ? 18 : 52;
   const LINK  = 120;
 
@@ -162,47 +219,35 @@
   const H = () => canvas.height / DPR;
 
   const pts = Array.from({ length: N }, () => ({
-    x: Math.random() * W(),
-    y: Math.random() * H(),
-    vx: (Math.random() - 0.5) * 0.22,
-    vy: (Math.random() - 0.5) * 0.22,
-    r: 1.4 + Math.random() * 0.9,
-    phase: Math.random() * Math.PI * 2,
-    collapseT: 0,
+    x: Math.random() * W(), y: Math.random() * H(),
+    vx: (Math.random() - 0.5) * 0.22, vy: (Math.random() - 0.5) * 0.22,
+    r: 1.4 + Math.random() * 0.9, phase: Math.random() * Math.PI * 2, collapseT: 0,
   }));
 
   let activePair = null, activePairT = 0;
-
   setInterval(() => {
     const i = Math.floor(Math.random() * N);
     const j = (i + 1 + Math.floor(Math.random() * (N - 1))) % N;
     activePair = [i, j]; activePairT = 90;
   }, 3200);
-
-  setInterval(() => {
-    pts[Math.floor(Math.random() * N)].collapseT = 55;
-  }, 1600);
+  setInterval(() => { pts[Math.floor(Math.random() * N)].collapseT = 55; }, 1600);
 
   function draw() {
     const w = W(), h = H();
     ctx.clearRect(0, 0, w, h);
-
     pts.forEach(p => {
       p.phase += 0.009;
-      p.vx += (Math.random() - 0.5) * 0.018;
-      p.vy += (Math.random() - 0.5) * 0.018;
+      p.vx += (Math.random() - 0.5) * 0.018; p.vy += (Math.random() - 0.5) * 0.018;
       const spd = Math.hypot(p.vx, p.vy);
       if (spd > 0.4) { p.vx *= 0.4 / spd; p.vy *= 0.4 / spd; }
       p.vx *= 0.995; p.vy *= 0.995;
       p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) { p.x = 0;  p.vx =  Math.abs(p.vx); }
-      if (p.x > w) { p.x = w;  p.vx = -Math.abs(p.vx); }
-      if (p.y < 0) { p.y = 0;  p.vy =  Math.abs(p.vy); }
-      if (p.y > h) { p.y = h;  p.vy = -Math.abs(p.vy); }
+      if (p.x < 0) { p.x = 0; p.vx =  Math.abs(p.vx); }
+      if (p.x > w) { p.x = w; p.vx = -Math.abs(p.vx); }
+      if (p.y < 0) { p.y = 0; p.vy =  Math.abs(p.vy); }
+      if (p.y > h) { p.y = h; p.vy = -Math.abs(p.vy); }
       if (p.collapseT > 0) p.collapseT--;
     });
-
-    /* entanglement lines */
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
         const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
@@ -213,222 +258,50 @@
           const boost = isActive ? (activePairT / 90) * 0.16 : 0;
           ctx.strokeStyle = `rgba(${ACRGB},${base + boost})`;
           ctx.lineWidth   = isActive ? 1.2 : 0.6;
-          ctx.beginPath();
-          ctx.moveTo(pts[i].x, pts[i].y);
-          ctx.lineTo(pts[j].x, pts[j].y);
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(pts[i].x, pts[i].y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke();
         }
       }
     }
     if (activePairT > 0) activePairT--;
-
-    /* qubit dots */
     pts.forEach(p => {
       const breathe   = 0.5 + 0.5 * Math.sin(p.phase);
       const baseAlpha = 0.07 + 0.04 * breathe;
-      const ct        = p.collapseT / 55;
-      const colAlpha  = ct * 0.35;
-      const rBoost    = ct * 4;
-
+      const ct = p.collapseT / 55, colAlpha = ct * 0.35, rBoost = ct * 4;
       ctx.fillStyle = `rgba(${ACRGB},${baseAlpha + colAlpha})`;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r + rBoost, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* spin arrow */
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r + rBoost, 0, Math.PI * 2); ctx.fill();
       const ang = p.phase * 0.45;
       ctx.strokeStyle = `rgba(${ACRGB},${(baseAlpha + colAlpha) * 0.6})`;
       ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(p.x, p.y);
-      ctx.lineTo(p.x + Math.cos(ang) * (p.r + 2.5), p.y + Math.sin(ang) * (p.r + 2.5));
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x + Math.cos(ang) * (p.r + 2.5), p.y + Math.sin(ang) * (p.r + 2.5)); ctx.stroke();
     });
-
     requestAnimationFrame(draw);
   }
   draw();
 })();
 
-/* ── GHZ State Circuit Animation ── */
+/* ── Typewriter intro ── */
 (function () {
-  const canvas = document.getElementById('qcircuit');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-
-  const isMobile = window.innerWidth < 640;
-  const W = isMobile ? 240 : 348;
-  const H = isMobile ? 152 : 218;
-  const DPR = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width  = W * DPR;
-  canvas.height = H * DPR;
-  canvas.style.width  = W + 'px';
-  canvas.style.height = H + 'px';
-  ctx.scale(DPR, DPR);
-
-  const ACRGB  = '220,38,38';
-  const ACCENT = '#DC2626';
-  const GATESC = 'rgba(130,130,130,0.5)';
-  const GATEFG = 'rgba(50,50,50,0.8)';
-  const MUTED  = 'rgba(110,110,110,0.6)';
-
-  const ML = 44, MR = 16, MT = 20;
-  const GS = isMobile ? 19 : 22;
-  const XEND = W - MR;
-  const qY = [MT + 22, MT + 64, MT + 106];
-
-  const N = 4;
-  function cx(i) { return ML + (XEND - ML) * (i + 0.7) / (N + 0.35); }
-  const GATES = [
-    { x: cx(0), ops: [{ t: 'H',  q: 0 }] },
-    { x: cx(1), ops: [{ t: 'CX', c: 0, g: 1 }] },
-    { x: cx(2), ops: [{ t: 'CX', c: 1, g: 2 }] },
-    { x: cx(3), ops: [{ t: 'M', q: 0 }, { t: 'M', q: 1 }, { t: 'M', q: 2 }] },
+  const out = document.getElementById('typewriter-out');
+  if (!out) return;
+  const segments = [
+    { text: "Hi, I'm Rohan. ",        pause: 420 },
+    { text: "I study quantum computing, hardware, and science policy at Brown. ", pause: 380 },
+    { text: "Explore my projects and writing — or reach out if you want to chat.", pause: 0  },
   ];
-
-  function rrect(x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.arcTo(x + w, y,     x + w, y + h, r);
-    ctx.arcTo(x + w, y + h, x,     y + h, r);
-    ctx.arcTo(x,     y + h, x,     y,     r);
-    ctx.arcTo(x,     y,     x + w, y,     r);
-    ctx.closePath();
-  }
-
-  function setGlow(on, intensity) {
-    ctx.shadowColor = on ? ACCENT : 'transparent';
-    ctx.shadowBlur  = on ? 12 * intensity : 0;
-  }
-
-  function drawBox(x, y, label, glow) {
-    const g = Math.max(0, Math.min(1, glow)), hot = g > 0.05;
-    setGlow(hot, g);
-    ctx.fillStyle   = hot ? `rgba(${ACRGB},0.07)` : 'rgba(248,248,248,0.95)';
-    ctx.strokeStyle = hot ? `rgba(${ACRGB},${0.45 + 0.55 * g})` : GATESC;
-    ctx.lineWidth   = hot ? 1.6 : 0.9;
-    rrect(x - GS / 2, y - GS / 2, GS, GS, 3);
-    ctx.fill(); ctx.stroke();
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = hot ? `rgba(${ACRGB},${0.65 + 0.35 * g})` : GATEFG;
-    ctx.font = `bold ${isMobile ? 9 : 10.5}px ui-monospace,'SF Mono',monospace`;
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillText(label, x, y + 0.5);
-  }
-
-  function drawCNOT(x, cy, ty, glow) {
-    const g = Math.max(0, Math.min(1, glow)), hot = g > 0.05;
-    const col = hot ? `rgba(${ACRGB},${0.55 + 0.45 * g})` : GATESC;
-    setGlow(hot, g);
-    ctx.strokeStyle = col; ctx.lineWidth = hot ? 1.6 : 0.9;
-    ctx.beginPath(); ctx.moveTo(x, cy); ctx.lineTo(x, ty); ctx.stroke();
-    ctx.fillStyle = col;
-    ctx.beginPath(); ctx.arc(x, cy, hot ? 5.5 : 4, 0, Math.PI * 2); ctx.fill();
-    const r = GS * 0.5;
-    ctx.beginPath(); ctx.arc(x, ty, r, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x - r, ty); ctx.lineTo(x + r, ty);
-    ctx.moveTo(x, ty - r); ctx.lineTo(x, ty + r);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-  }
-
-  let scanX = ML, mode = 'scan', holdLeft = 0, fadeAlpha = 1, measBit = 0;
-  /* Flash effect when measurement is reached */
-  let flashT = 0;
-  const SPEED = (XEND - ML) / 265;
-  const GLOW_R = 26;
-
-  function glowAt(x) {
-    return mode !== 'scan' ? 0 : Math.max(0, 1 - Math.abs(scanX - x) / GLOW_R);
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    ctx.globalAlpha = mode === 'fade' ? fadeAlpha : 1;
-
-    /* wire lines */
-    qY.forEach(y => {
-      ctx.lineWidth = 0.9;
-      ctx.strokeStyle = 'rgba(150,150,150,0.4)';
-      ctx.beginPath(); ctx.moveTo(ML, y); ctx.lineTo(Math.min(scanX, XEND), y); ctx.stroke();
-      ctx.strokeStyle = 'rgba(150,150,150,0.14)';
-      ctx.beginPath(); ctx.moveTo(Math.max(ML, scanX), y); ctx.lineTo(XEND, y); ctx.stroke();
-    });
-
-    /* |0⟩ labels */
-    ctx.fillStyle = MUTED;
-    ctx.font = `${isMobile ? 9 : 10.5}px system-ui,sans-serif`;
-    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    qY.forEach(y => ctx.fillText('|0⟩', ML - 6, y));
-
-    const measX = GATES[3].x;
-    GATES.forEach(col => {
-      const glow = glowAt(col.x);
-      col.ops.forEach(op => {
-        if (op.t === 'CX') {
-          drawCNOT(col.x, qY[op.c], qY[op.g], glow);
-        } else if (op.t === 'M') {
-          drawBox(col.x, qY[op.q], 'M', glow);
-          if (mode === 'hold' || (mode === 'scan' && scanX > measX + GS * 0.7)) {
-            /* measurement outcome — flash drives the alpha */
-            const outAlpha = flashT > 0 ? 0.55 + (flashT / 18) * 0.45 : 0.78;
-            ctx.fillStyle = `rgba(${ACRGB},${outAlpha})`;
-            ctx.font = `bold ${isMobile ? 10 : 11}px ui-monospace,monospace`;
-            ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-            ctx.fillText(String(measBit), col.x + GS / 2 + 4, qY[op.q]);
-          }
-        } else {
-          drawBox(col.x, qY[op.q], op.t, glow);
-        }
-      });
-    });
-
-    /* scanner beam */
-    if (mode === 'scan' && scanX <= XEND + 6) {
-      const top = qY[0] - 26, bot = qY[2] + 26;
-      const grad = ctx.createLinearGradient(scanX - 22, 0, scanX + 2, 0);
-      grad.addColorStop(0, `rgba(${ACRGB},0)`);
-      grad.addColorStop(1, `rgba(${ACRGB},0.42)`);
-      ctx.fillStyle = grad;
-      ctx.fillRect(scanX - 22, top, 24, bot - top);
-      ctx.strokeStyle = `rgba(${ACRGB},0.65)`;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.moveTo(scanX, top); ctx.lineTo(scanX, bot); ctx.stroke();
-    }
-
-    /* measurement flash burst */
-    if (flashT > 0) {
-      const t = flashT / 18;
-      qY.forEach(y => {
-        const grad = ctx.createRadialGradient(measX, y, 0, measX, y, 28 * t);
-        grad.addColorStop(0, `rgba(${ACRGB},${0.18 * t})`);
-        grad.addColorStop(1, `rgba(${ACRGB},0)`);
-        ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(measX, y, 28 * t, 0, Math.PI * 2); ctx.fill();
-      });
-      flashT--;
-    }
-
-    ctx.globalAlpha = 1;
-
-    if (mode === 'scan') {
-      scanX += SPEED;
-      /* trigger flash when scanner first reaches measurement column */
-      if (scanX >= measX - 2 && scanX <= measX + SPEED + 2 && flashT === 0) {
-        flashT = 18;
-      }
-      if (scanX > XEND + 6) { mode = 'hold'; holdLeft = 110; }
-    } else if (mode === 'hold') {
-      if (--holdLeft <= 0) mode = 'fade';
+  let si = 0, ci = 0;
+  function type() {
+    if (si >= segments.length) return;
+    const seg = segments[si];
+    if (ci < seg.text.length) {
+      out.textContent += seg.text[ci++];
+      setTimeout(type, 32);
     } else {
-      fadeAlpha -= 0.022;
-      if (fadeAlpha <= 0) { mode = 'scan'; scanX = ML; fadeAlpha = 1; measBit ^= 1; flashT = 0; }
+      si++; ci = 0;
+      if (si < segments.length) setTimeout(type, seg.pause);
     }
-
-    requestAnimationFrame(draw);
   }
-  draw();
+  setTimeout(type, 900);
 })();
 </script>
 
