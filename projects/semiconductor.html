@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semiconductor Device Fabrication &mdash; Rohan Pankaj</title>
+  <meta name="description" content="pn-junction diode fabrication from KLayout layout to cleanroom processing and electrical characterization." />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="nav-name">Rohan Pankaj</a>
+    <ul class="nav-links">
+      <li><a href="../about.html">About</a></li>
+      <li><a href="../research.html">Research</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../experience.html">Experience</a></li>
+      <li><a href="../writing.html">Writing</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container">
+
+    <a href="../projects.html" class="post-back">&larr; Projects</a>
+
+    <div class="project-page-header">
+      <h1>Semiconductor Device Fabrication</h1>
+      <p class="project-page-meta">Brown University EE Cleanroom &middot; Jan&ndash;May 2025</p>
+    </div>
+
+    <div class="photo-grid fade-in">
+      <img
+        src="../photos/semiconductor_project/devices%20on%20wafer.png"
+        alt="Fabricated pn-junction diode devices on silicon wafer"
+      />
+      <img
+        src="../photos/semiconductor_project/devices.png"
+        alt="Close-up of fabricated devices"
+      />
+      <img
+        src="../photos/semiconductor_project/forward%20bias.png"
+        alt="I-V characterization: forward bias curves"
+        class="photo-wide"
+        style="aspect-ratio: auto; max-height: 340px; object-fit: contain; background: var(--surface);"
+      />
+    </div>
+
+    <div class="prose fade-in">
+
+      <h2>Overview</h2>
+      <p>
+        This project covered the complete design-to-characterization cycle for silicon
+        pn-junction diode devices &mdash; from laying out geometry in a GDSII editor through
+        every cleanroom process step to final electrical measurement. The goal was to develop
+        hands-on fluency with the full fabrication flow and to quantify process yield
+        using statistical methods.
+      </p>
+
+      <h2>Design</h2>
+      <p>
+        Device layouts were designed in <strong>KLayout</strong>, an open-source GDSII editor,
+        and exported as mask files for direct-write lithography. The design included
+        multiple device geometries and test structures to support statistical yield analysis.
+      </p>
+
+      <h2>Fabrication</h2>
+      <p>
+        All processing was carried out in the Brown University cleanroom:
+      </p>
+      <ul>
+        <li>
+          <strong>Lithography</strong> &mdash; maskless direct-write exposure on an
+          MLA-150 system, enabling flexible, mask-free patterning at micron resolution
+        </li>
+        <li>
+          <strong>Wet etching</strong> &mdash; buffered oxide etch (BOE) for oxide removal
+          prior to implantation
+        </li>
+        <li>
+          <strong>Thermal processing</strong> &mdash; furnace annealing at 1000&deg;C
+          to drive in dopants and activate junctions
+        </li>
+        <li>
+          <strong>Metallization</strong> &mdash; e-beam physical vapor deposition (PVD)
+          of metal contacts, followed by solvent lift-off
+        </li>
+      </ul>
+
+      <h2>Characterization &amp; yield</h2>
+      <p>
+        Completed devices were characterized electrically using I-V measurements across
+        forward and reverse bias regimes. Diode ideality factors were extracted from the
+        forward-bias exponential region. Statistical Process Control (SPC) was applied
+        to the ideality factor distribution across the wafer to define and measure
+        effective device yield, which came out to <strong>75%</strong>.
+      </p>
+
+    </div>
+
+    <div class="fade-in" style="margin-top: 1.5rem;">
+      <a href="../docs/semiconductor-project.pdf" target="_blank" rel="noopener" class="project-link">
+        Read full report (PDF) &rarr;
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <span class="footer-copy">&copy; 2025 Rohan Pankaj</span>
+    <div class="footer-links">
+      <a href="https://linkedin.com/in/rohanpankaj" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://twitter.com/RohanSPankaj" target="_blank" rel="noopener">Twitter</a>
+      <a href="mailto:rohan@rohanpankaj.com">Email</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
