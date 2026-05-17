@@ -55,7 +55,7 @@
     }
 
     .result-W { color: #2d6a2d; }
-    .result-L { color: #8B1A1A; }
+    .result-L { color: var(--accent); }
 
     .pred-note {
       font-size: 0.74rem;
@@ -109,7 +109,7 @@
   </div>
 </nav>
 
-<main>
+<main class="page-main">
   <div class="container">
 
     <a href="../projects.html" class="post-back">&larr; Projects</a>
@@ -176,6 +176,21 @@
         <span class="stat-label">Seasons archived</span>
       </div>
     </div>
+
+    <section class="section fade-in" style="margin-top:2.5rem;">
+      <div class="section-header">
+        <h2>Video</h2>
+      </div>
+      <!-- Replace VIDEO_ID below with your YouTube video ID (the part after watch?v=) -->
+      <div class="video-wrap">
+        <iframe
+          src="https://www.youtube.com/embed/VIDEO_ID_HERE"
+          title="NBA Game Score Prediction — YouTube"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </section>
 
     <section class="section fade-in" style="margin-top:2.5rem;">
       <div class="section-header">
@@ -312,12 +327,7 @@
   </div>
 </footer>
 
-<script>
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.08 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-</script>
+<script src="../js/main.js"></script>
 
 </body>
 </html>

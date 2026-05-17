@@ -8,13 +8,13 @@
   <link rel="stylesheet" href="css/style.css" />
   <style>
     /* Staggered hero load animation */
-    .hero h1        { animation: hfade 0.7s ease both; animation-delay: 0.05s; }
-    .tagline        { animation: hfade 0.7s ease both; animation-delay: 0.18s; }
-    .accent-rule    { animation: hfade 0.7s ease both; animation-delay: 0.28s; }
-    .hero-bio       { animation: hfade 0.7s ease both; animation-delay: 0.38s; }
-    .hero-visual    { animation: hfade 0.7s ease both; animation-delay: 0.5s; }
+    .hero h1      { animation: hfade 0.7s ease both; animation-delay: 0.05s; }
+    .tagline      { animation: hfade 0.7s ease both; animation-delay: 0.2s; }
+    .accent-rule  { animation: hfade 0.7s ease both; animation-delay: 0.3s; }
+    .hero-bio     { animation: hfade 0.7s ease both; animation-delay: 0.4s; }
+    .hero-visual  { animation: hfade 0.7s ease both; animation-delay: 0.52s; }
     @keyframes hfade {
-      from { opacity: 0; transform: translateY(14px); }
+      from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
   </style>
@@ -35,13 +35,14 @@
 </nav>
 
 <main>
-  <div class="container">
 
-    <section class="hero">
-      <canvas id="particles" aria-hidden="true"></canvas>
+  <!-- Hero: full-width section, particle canvas fills the whole area -->
+  <section class="hero">
+    <canvas id="particles" aria-hidden="true"></canvas>
+    <div class="container">
       <div class="hero-inner">
         <div class="hero-text">
-          <h1>Rohan Pankaj</h1>
+          <h1>Rohan<br>Pankaj</h1>
           <p class="tagline">Electrical Engineering &amp; Public Affairs &middot; Brown University &rsquo;26</p>
           <span class="accent-rule"></span>
           <p class="hero-bio">
@@ -55,7 +56,11 @@
           <span class="bloch-label">GHZ State Circuit</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
+
+  <!-- Content sections sit below the full-width hero -->
+  <div class="container page-content">
 
     <section class="section fade-in">
       <div class="section-header">
@@ -120,7 +125,7 @@
 
 <footer>
   <div class="container">
-    <span class="footer-copy">&copy; 2025 Rohan Pankaj</span>
+    <span class="footer-copy">&copy; 2026 Rohan Pankaj</span>
     <div class="footer-links">
       <a href="https://linkedin.com/in/rohanpankaj" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://twitter.com/RohanSPankaj" target="_blank" rel="noopener">Twitter</a>
@@ -129,17 +134,18 @@
   </div>
 </footer>
 
+<script src="js/main.js"></script>
 <script>
-/* ── Quantum particle background ── */
+/* ── Quantum particle background — spans the full hero width ── */
 (function () {
   const canvas = document.getElementById('particles');
   if (!canvas) return;
-  const hero = canvas.parentElement;
+  const hero = canvas.parentElement; /* .hero section */
   const ctx  = canvas.getContext('2d');
   const DPR  = Math.min(window.devicePixelRatio || 1, 2);
-  const ACRGB = '139,26,26';
-  const N     = window.innerWidth < 600 ? 14 : 26;
-  const LINK  = 90;
+  const ACRGB = '220,38,38'; /* matches --accent */
+  const N     = window.innerWidth < 640 ? 18 : 52;
+  const LINK  = 120;
 
   function resize() {
     const r = hero.getBoundingClientRect();
@@ -174,8 +180,8 @@
   }, 3200);
 
   setInterval(() => {
-    pts[Math.floor(Math.random() * N)].collapseT = 50;
-  }, 1800);
+    pts[Math.floor(Math.random() * N)].collapseT = 55;
+  }, 1600);
 
   function draw() {
     const w = W(), h = H();
@@ -189,10 +195,10 @@
       if (spd > 0.4) { p.vx *= 0.4 / spd; p.vy *= 0.4 / spd; }
       p.vx *= 0.995; p.vy *= 0.995;
       p.x += p.vx; p.y += p.vy;
-      if (p.x < 0)  { p.x = 0;  p.vx =  Math.abs(p.vx); }
-      if (p.x > w)  { p.x = w;  p.vx = -Math.abs(p.vx); }
-      if (p.y < 0)  { p.y = 0;  p.vy =  Math.abs(p.vy); }
-      if (p.y > h)  { p.y = h;  p.vy = -Math.abs(p.vy); }
+      if (p.x < 0) { p.x = 0;  p.vx =  Math.abs(p.vx); }
+      if (p.x > w) { p.x = w;  p.vx = -Math.abs(p.vx); }
+      if (p.y < 0) { p.y = 0;  p.vy =  Math.abs(p.vy); }
+      if (p.y > h) { p.y = h;  p.vy = -Math.abs(p.vy); }
       if (p.collapseT > 0) p.collapseT--;
     });
 
@@ -203,10 +209,10 @@
         const d  = Math.hypot(dx, dy);
         if (d < LINK) {
           const isActive = activePair && activePair[0] === i && activePair[1] === j;
-          const base = (1 - d / LINK) * 0.055;
-          const boost = isActive ? (activePairT / 90) * 0.13 : 0;
+          const base  = (1 - d / LINK) * 0.07;
+          const boost = isActive ? (activePairT / 90) * 0.16 : 0;
           ctx.strokeStyle = `rgba(${ACRGB},${base + boost})`;
-          ctx.lineWidth   = isActive ? 1 : 0.5;
+          ctx.lineWidth   = isActive ? 1.2 : 0.6;
           ctx.beginPath();
           ctx.moveTo(pts[i].x, pts[i].y);
           ctx.lineTo(pts[j].x, pts[j].y);
@@ -218,11 +224,11 @@
 
     /* qubit dots */
     pts.forEach(p => {
-      const breathe    = 0.5 + 0.5 * Math.sin(p.phase);
-      const baseAlpha  = 0.045 + 0.025 * breathe;
-      const ct         = p.collapseT / 50;
-      const colAlpha   = ct * 0.28;
-      const rBoost     = ct * 3.5;
+      const breathe   = 0.5 + 0.5 * Math.sin(p.phase);
+      const baseAlpha = 0.07 + 0.04 * breathe;
+      const ct        = p.collapseT / 55;
+      const colAlpha  = ct * 0.35;
+      const rBoost    = ct * 4;
 
       ctx.fillStyle = `rgba(${ACRGB},${baseAlpha + colAlpha})`;
       ctx.beginPath();
@@ -231,11 +237,11 @@
 
       /* spin arrow */
       const ang = p.phase * 0.45;
-      ctx.strokeStyle = `rgba(${ACRGB},${(baseAlpha + colAlpha) * 0.65})`;
+      ctx.strokeStyle = `rgba(${ACRGB},${(baseAlpha + colAlpha) * 0.6})`;
       ctx.lineWidth = 0.5;
       ctx.beginPath();
       ctx.moveTo(p.x, p.y);
-      ctx.lineTo(p.x + Math.cos(ang) * (p.r + 2), p.y + Math.sin(ang) * (p.r + 2));
+      ctx.lineTo(p.x + Math.cos(ang) * (p.r + 2.5), p.y + Math.sin(ang) * (p.r + 2.5));
       ctx.stroke();
     });
 
@@ -244,15 +250,15 @@
   draw();
 })();
 
-/* ── Quantum Circuit Animation: GHZ State Preparation ── */
+/* ── GHZ State Circuit Animation ── */
 (function () {
   const canvas = document.getElementById('qcircuit');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  const isMobile = window.innerWidth < 600;
-  const W = isMobile ? 220 : 268;
-  const H = isMobile ? 138 : 168;
+  const isMobile = window.innerWidth < 640;
+  const W = isMobile ? 240 : 348;
+  const H = isMobile ? 152 : 218;
   const DPR = Math.min(window.devicePixelRatio || 1, 2);
   canvas.width  = W * DPR;
   canvas.height = H * DPR;
@@ -260,16 +266,16 @@
   canvas.style.height = H + 'px';
   ctx.scale(DPR, DPR);
 
-  const ACRGB  = '139,26,26';
-  const ACCENT = '#8B1A1A';
-  const GATESC = 'rgba(130,130,130,0.55)';
-  const GATEFG = 'rgba(55,55,55,0.82)';
-  const MUTED  = 'rgba(110,110,110,0.62)';
+  const ACRGB  = '220,38,38';
+  const ACCENT = '#DC2626';
+  const GATESC = 'rgba(130,130,130,0.5)';
+  const GATEFG = 'rgba(50,50,50,0.8)';
+  const MUTED  = 'rgba(110,110,110,0.6)';
 
-  const ML = 40, MR = 14, MT = 18;
-  const GS = isMobile ? 18 : 21;
+  const ML = 44, MR = 16, MT = 20;
+  const GS = isMobile ? 19 : 22;
   const XEND = W - MR;
-  const qY = [MT + 20, MT + 58, MT + 96];
+  const qY = [MT + 22, MT + 64, MT + 106];
 
   const N = 4;
   function cx(i) { return ML + (XEND - ML) * (i + 0.7) / (N + 0.35); }
@@ -292,20 +298,20 @@
 
   function setGlow(on, intensity) {
     ctx.shadowColor = on ? ACCENT : 'transparent';
-    ctx.shadowBlur  = on ? 10 * intensity : 0;
+    ctx.shadowBlur  = on ? 12 * intensity : 0;
   }
 
   function drawBox(x, y, label, glow) {
     const g = Math.max(0, Math.min(1, glow)), hot = g > 0.05;
     setGlow(hot, g);
-    ctx.fillStyle   = hot ? `rgba(${ACRGB},0.06)` : 'rgba(246,246,246,0.92)';
+    ctx.fillStyle   = hot ? `rgba(${ACRGB},0.07)` : 'rgba(248,248,248,0.95)';
     ctx.strokeStyle = hot ? `rgba(${ACRGB},${0.45 + 0.55 * g})` : GATESC;
-    ctx.lineWidth   = hot ? 1.5 : 0.9;
-    rrect(x - GS / 2, y - GS / 2, GS, GS, 2.5);
+    ctx.lineWidth   = hot ? 1.6 : 0.9;
+    rrect(x - GS / 2, y - GS / 2, GS, GS, 3);
     ctx.fill(); ctx.stroke();
     ctx.shadowBlur = 0;
     ctx.fillStyle = hot ? `rgba(${ACRGB},${0.65 + 0.35 * g})` : GATEFG;
-    ctx.font = `bold ${isMobile ? 9 : 10}px ui-monospace,'SF Mono',monospace`;
+    ctx.font = `bold ${isMobile ? 9 : 10.5}px ui-monospace,'SF Mono',monospace`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(label, x, y + 0.5);
   }
@@ -314,10 +320,10 @@
     const g = Math.max(0, Math.min(1, glow)), hot = g > 0.05;
     const col = hot ? `rgba(${ACRGB},${0.55 + 0.45 * g})` : GATESC;
     setGlow(hot, g);
-    ctx.strokeStyle = col; ctx.lineWidth = hot ? 1.5 : 0.9;
+    ctx.strokeStyle = col; ctx.lineWidth = hot ? 1.6 : 0.9;
     ctx.beginPath(); ctx.moveTo(x, cy); ctx.lineTo(x, ty); ctx.stroke();
     ctx.fillStyle = col;
-    ctx.beginPath(); ctx.arc(x, cy, hot ? 5 : 3.8, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x, cy, hot ? 5.5 : 4, 0, Math.PI * 2); ctx.fill();
     const r = GS * 0.5;
     ctx.beginPath(); ctx.arc(x, ty, r, 0, Math.PI * 2); ctx.stroke();
     ctx.beginPath();
@@ -328,8 +334,10 @@
   }
 
   let scanX = ML, mode = 'scan', holdLeft = 0, fadeAlpha = 1, measBit = 0;
-  const SPEED = (XEND - ML) / 255;
-  const GLOW_R = 24;
+  /* Flash effect when measurement is reached */
+  let flashT = 0;
+  const SPEED = (XEND - ML) / 265;
+  const GLOW_R = 26;
 
   function glowAt(x) {
     return mode !== 'scan' ? 0 : Math.max(0, 1 - Math.abs(scanX - x) / GLOW_R);
@@ -339,18 +347,20 @@
     ctx.clearRect(0, 0, W, H);
     ctx.globalAlpha = mode === 'fade' ? fadeAlpha : 1;
 
+    /* wire lines */
     qY.forEach(y => {
-      ctx.lineWidth = 0.85;
-      ctx.strokeStyle = 'rgba(150,150,150,0.42)';
+      ctx.lineWidth = 0.9;
+      ctx.strokeStyle = 'rgba(150,150,150,0.4)';
       ctx.beginPath(); ctx.moveTo(ML, y); ctx.lineTo(Math.min(scanX, XEND), y); ctx.stroke();
-      ctx.strokeStyle = 'rgba(150,150,150,0.16)';
+      ctx.strokeStyle = 'rgba(150,150,150,0.14)';
       ctx.beginPath(); ctx.moveTo(Math.max(ML, scanX), y); ctx.lineTo(XEND, y); ctx.stroke();
     });
 
+    /* |0⟩ labels */
     ctx.fillStyle = MUTED;
-    ctx.font = `${isMobile ? 9 : 10}px system-ui,sans-serif`;
+    ctx.font = `${isMobile ? 9 : 10.5}px system-ui,sans-serif`;
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
-    qY.forEach(y => ctx.fillText('|0⟩', ML - 5, y));
+    qY.forEach(y => ctx.fillText('|0⟩', ML - 6, y));
 
     const measX = GATES[3].x;
     GATES.forEach(col => {
@@ -361,10 +371,12 @@
         } else if (op.t === 'M') {
           drawBox(col.x, qY[op.q], 'M', glow);
           if (mode === 'hold' || (mode === 'scan' && scanX > measX + GS * 0.7)) {
-            ctx.fillStyle = `rgba(${ACRGB},0.78)`;
-            ctx.font = `bold ${isMobile ? 9 : 10}px ui-monospace,monospace`;
+            /* measurement outcome — flash drives the alpha */
+            const outAlpha = flashT > 0 ? 0.55 + (flashT / 18) * 0.45 : 0.78;
+            ctx.fillStyle = `rgba(${ACRGB},${outAlpha})`;
+            ctx.font = `bold ${isMobile ? 10 : 11}px ui-monospace,monospace`;
             ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-            ctx.fillText(String(measBit), col.x + GS / 2 + 3, qY[op.q]);
+            ctx.fillText(String(measBit), col.x + GS / 2 + 4, qY[op.q]);
           }
         } else {
           drawBox(col.x, qY[op.q], op.t, glow);
@@ -372,40 +384,52 @@
       });
     });
 
+    /* scanner beam */
     if (mode === 'scan' && scanX <= XEND + 6) {
-      const top = qY[0] - 24, bot = qY[2] + 24;
-      const grad = ctx.createLinearGradient(scanX - 20, 0, scanX + 2, 0);
+      const top = qY[0] - 26, bot = qY[2] + 26;
+      const grad = ctx.createLinearGradient(scanX - 22, 0, scanX + 2, 0);
       grad.addColorStop(0, `rgba(${ACRGB},0)`);
-      grad.addColorStop(1, `rgba(${ACRGB},0.38)`);
+      grad.addColorStop(1, `rgba(${ACRGB},0.42)`);
       ctx.fillStyle = grad;
-      ctx.fillRect(scanX - 20, top, 22, bot - top);
-      ctx.strokeStyle = `rgba(${ACRGB},0.62)`;
-      ctx.lineWidth = 1.4;
+      ctx.fillRect(scanX - 22, top, 24, bot - top);
+      ctx.strokeStyle = `rgba(${ACRGB},0.65)`;
+      ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(scanX, top); ctx.lineTo(scanX, bot); ctx.stroke();
+    }
+
+    /* measurement flash burst */
+    if (flashT > 0) {
+      const t = flashT / 18;
+      qY.forEach(y => {
+        const grad = ctx.createRadialGradient(measX, y, 0, measX, y, 28 * t);
+        grad.addColorStop(0, `rgba(${ACRGB},${0.18 * t})`);
+        grad.addColorStop(1, `rgba(${ACRGB},0)`);
+        ctx.fillStyle = grad;
+        ctx.beginPath(); ctx.arc(measX, y, 28 * t, 0, Math.PI * 2); ctx.fill();
+      });
+      flashT--;
     }
 
     ctx.globalAlpha = 1;
 
     if (mode === 'scan') {
       scanX += SPEED;
+      /* trigger flash when scanner first reaches measurement column */
+      if (scanX >= measX - 2 && scanX <= measX + SPEED + 2 && flashT === 0) {
+        flashT = 18;
+      }
       if (scanX > XEND + 6) { mode = 'hold'; holdLeft = 110; }
     } else if (mode === 'hold') {
       if (--holdLeft <= 0) mode = 'fade';
     } else {
-      fadeAlpha -= 0.02;
-      if (fadeAlpha <= 0) { mode = 'scan'; scanX = ML; fadeAlpha = 1; measBit ^= 1; }
+      fadeAlpha -= 0.022;
+      if (fadeAlpha <= 0) { mode = 'scan'; scanX = ML; fadeAlpha = 1; measBit ^= 1; flashT = 0; }
     }
 
     requestAnimationFrame(draw);
   }
   draw();
 })();
-
-/* ── Scroll fade-in ── */
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.08 });
-document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>
 
 </body>
